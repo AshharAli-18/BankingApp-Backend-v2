@@ -61,7 +61,6 @@ public class AccountController {
 
 
     @DeleteMapping("/v2/account/{id}")
-    @CrossOrigin(origins = "http://localhost:3000")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void deleteAccount(@PathVariable Long id) {
         accountService.deleteAccount(id);
