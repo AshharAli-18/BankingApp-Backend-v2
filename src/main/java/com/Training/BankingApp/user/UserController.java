@@ -20,7 +20,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/v2/customer-login")
+    @PostMapping("/v2/auth/customer-login")
     @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<?> loginCustomer(@RequestBody LoginRequest loginRequest) {
         try {
@@ -31,7 +31,8 @@ public class UserController {
         }
     }
 
-    @PostMapping("/v2/admin-login")
+//    @PostMapping("/v2/auth/admin-login")
+    @PostMapping("/v2/auth/admin-login")
     @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<?> loginAdmin(@RequestBody LoginRequest loginRequest) {
         try {
