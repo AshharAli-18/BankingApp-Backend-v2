@@ -21,7 +21,7 @@ public class AccountController {
     @Autowired
     private AccountService accountService;
 
-    @GetMapping("/api/account/{accountId}")
+    @GetMapping("/v2/account/{accountId}")
     @PreAuthorize("hasRole('ROLE_CUSTOMER') or hasRole('ROLE_ADMIN')")
     public Account getAccount(@PathVariable("accountId") long accountId) {
         return accountService.getAccount(accountId);
