@@ -1,3 +1,4 @@
+
 package com.Training.BankingApp.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/api/auth/loginCustomer")
+    @PostMapping("/v2/customer-login")
     @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<?> loginCustomer(@RequestBody LoginRequest loginRequest) {
         try {
@@ -30,7 +31,7 @@ public class UserController {
         }
     }
 
-    @PostMapping("/api/auth/loginAdmin")
+    @PostMapping("/v2/admin-login")
     @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<?> loginAdmin(@RequestBody LoginRequest loginRequest) {
         try {
@@ -41,13 +42,13 @@ public class UserController {
         }
     }
 
-    @GetMapping("/api/getUsers")
+    @GetMapping("/v2/users")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public List<User> getUsers() {
         return userService.getAllUsers();
     }
 
-    @GetMapping("/api/getUserByUserId/{userId}")
+    @GetMapping("/v2/user/{userId}")
     @PreAuthorize("hasRole('ROLE_CUSTOMER')")
     public User getUserByUserId(@PathVariable("userId") long userId) {
         return userService.getUserByUserId(userId);

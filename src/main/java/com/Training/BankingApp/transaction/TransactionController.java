@@ -1,3 +1,4 @@
+
 package com.Training.BankingApp.transaction;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,7 @@ public class TransactionController {
     @Autowired
     private TransactionService transactionService;
 
-    @GetMapping("/api/getAllTransactions")
+    @GetMapping("/v2/transactions")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public List<Transaction> getAllTransactions(@RequestParam(name = "page", defaultValue = "0") Integer page,
                                                 @RequestParam(name = "size", defaultValue = "10") Integer size) {
@@ -23,14 +24,14 @@ public class TransactionController {
     }
 
 
-    @GetMapping("/api/getTransactionByAccountId/{id}")
+    @GetMapping("/v2/account/{id}/transactions")
     @PreAuthorize("hasRole('ROLE_CUSTOMER') or hasRole('ROLE_ADMIN')")
     public List<Transaction> getTransactionByAccountId(@PathVariable long id) {
         return transactionService.getAllByAccountId(id);
     }
 
 
-    @GetMapping("/api/getTransactionByTransferId/{id}")
+    @GetMapping("/v2/transfer/{id}/transactions")
     @PreAuthorize(" hasRole('ROLE_ADMIN')")
     public List<Transaction> getTransactionByTransferId(@PathVariable long id) {
         return transactionService.getAllByTransferId(id);

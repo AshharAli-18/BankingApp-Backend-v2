@@ -1,3 +1,4 @@
+
 package com.Training.BankingApp.transfer;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,7 @@ public class TransferController {
     @Autowired
     private TransferService transferService;
 
-    @PostMapping("/api/transferMoney")
+    @PostMapping("/v2/transfer")
     @PreAuthorize("hasRole('ROLE_CUSTOMER')")
     public ResponseEntity<String> transferMoney(@RequestBody TransferRequest transferRequest) {
         try {
@@ -34,7 +35,7 @@ public class TransferController {
         }
     }
 
-    @GetMapping("/api/getAllTransfers")
+    @GetMapping("/v2/transfers")
     @CrossOrigin(origins = "http://localhost:3000")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public List<Transfer> getAllTransfers(

@@ -1,3 +1,4 @@
+
 package com.Training.BankingApp.deletedaccount;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -20,14 +21,14 @@ public class DeletedAccountController {
     @Autowired
     private DeletedAccountService deletedAccountService;
 
-    @GetMapping("/api/getAllDeletedAccounts")
+    @GetMapping("/v2/deleted-accounts")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public List<DeletedAccount> getAllDeletedAccounts(@RequestParam(name = "page", defaultValue = "0") Integer page,
                                                       @RequestParam(name = "size", defaultValue = "10") Integer size) {
         return deletedAccountService.getAllDeletedAccounts(page, size);
     }
 
-    @DeleteMapping("/api/admin/permanentAccountDelete/{id}")
+    @DeleteMapping("/v2/deleted-account/{id}")
     @CrossOrigin(origins = "http://localhost:3000")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<String> permanentDeleteAccount(@PathVariable Long id) {
