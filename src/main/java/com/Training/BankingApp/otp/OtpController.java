@@ -1,3 +1,4 @@
+
 package com.Training.BankingApp.otp;
 
 
@@ -14,11 +15,11 @@ public class OtpController {
     @Autowired
     private OtpService otpService;
 
-    @PostMapping("/api/requestOtp")
+    @PostMapping("/v2/otp")
     @PreAuthorize("hasRole('ROLE_CUSTOMER')")
     public ResponseEntity<String> requestOtp(@RequestBody OtpRequest otpRequest) {
 //        String otp = otpService.generateAndSendOtp(otpRequest.getEmail());
-       otpService.generateAndSendOtp(otpRequest.getEmail());
+        otpService.generateAndSendOtp(otpRequest.getEmail());
         return ResponseEntity.ok("OTP sent to your email.");
     }
 

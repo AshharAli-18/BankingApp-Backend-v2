@@ -1,3 +1,4 @@
+
 package com.Training.BankingApp.customerrequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ public class CustomerRequestController {
     @Autowired
     private CustomerRequestService customerRequestService;
 
-    @PostMapping("/auth/customerRequest")
+    @PostMapping("/v2/request")
     @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<?> customerRequest(@RequestBody CustomerRequestDTO customerRequestDTO) {
 
@@ -34,19 +35,19 @@ public class CustomerRequestController {
         }
     }
 
-    @GetMapping("/getAllRequests")
+    @GetMapping("/v2/requests")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public List<CustomerRequest> getAllRequests() {
         return customerRequestService.getAllRequests();
     }
 
-    @GetMapping("/getRequest/{id}")
+    @GetMapping("/v2/request/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public CustomerRequest getRequest(@PathVariable int id) {
         return customerRequestService.getRequest(id);
     }
 
-    @DeleteMapping("/deleteRequest/{id}")
+    @DeleteMapping("/v2/request/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void deleteRequest(@PathVariable int id) {
         customerRequestService.deleteRequest(id);
