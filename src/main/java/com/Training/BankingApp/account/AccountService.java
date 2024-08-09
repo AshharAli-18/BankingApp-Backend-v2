@@ -17,6 +17,7 @@ import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.HashSet;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 @Service
@@ -74,32 +75,42 @@ public class AccountService {
         return ResponseEntity.ok(account);
     }
 
-    public Account getAccountByUserId(long userId) {
-        return accountRepository.findByUserId(userId);
+    public ResponseEntity<Account> getAccountByUserId(long userId) {
+        Account account = accountRepository.findByUserId(userId);
+
+        if(account==null){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        return ResponseEntity.ok(account);
     }
 
-    public List<Account> getAllAccounts(Integer page, Integer size) {
+    public ResponseEntity<List<Account>> getAllAccounts(Integer page, Integer size) {
         if (page < 0) {
             page = 0;
         }
         if (size > MAX_PAGE_SIZE) {
             size = MAX_PAGE_SIZE;
         }
-        return accountRepository.findAll(PageRequest.of(page, size)).getContent();
+
+        List<Account> accounts = accountRepository.findAll(PageRequest.of(page, size)).getContent();
+
+        if (accounts.isEmpty()) {
+            return ResponseEntity.noContent().build();  // 204 No Content if the list is empty
+        }
+
+        return ResponseEntity.ok(accounts);  // 200 OK with the list of accounts
     }
 
     public void updateAccount(AccountUpdateRequest updateRequest) {
         Account account = accountRepository.findById(updateRequest.getAccountId())
-                .orElseThrow(() -> new RuntimeException("Account not found"));
+                .orElseThrow(() -> new NoSuchElementException("Account not found"));
 
-        // Update account details
         account.setAccountType(updateRequest.getAccountType());
         account.setBalance(updateRequest.getBalance());
         accountRepository.save(account); // Save updated account
 
-        // Update user details
         User user = userRepository.findById(account.getUserId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new NoSuchElementException("User not found"));
         user.setUsername(updateRequest.getUsername());
         user.setEmail(updateRequest.getEmail());
         user.setPhoneNumber(updateRequest.getPhone());
@@ -107,6 +118,7 @@ public class AccountService {
         user.setName(updateRequest.getName());
         userRepository.save(user); // Save updated user
     }
+
 
     public void deleteAccount(long accountId) {
         Account account = accountRepository.findById(accountId)
