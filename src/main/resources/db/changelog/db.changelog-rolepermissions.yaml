@@ -1,0 +1,36 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: Ashhar
+      changes:
+        - createTable:
+            tableName: rolepermissions
+            columns:
+              - column:
+                  name: roleId
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: permissionId
+                  type: int
+                  constraints:
+                    nullable: false
+
+        - addPrimaryKey:
+            columnNames: roleId, permissionId
+            tableName: rolepermissions
+
+        - addForeignKeyConstraint:
+            baseTableName: rolepermissions
+            baseColumnNames: roleId
+            constraintName: fk_rolepermissions_role
+            referencedTableName: roles
+            referencedColumnNames: roleId
+
+        - addForeignKeyConstraint:
+            baseTableName: rolepermissions
+            baseColumnNames: permissionId
+            constraintName: fk_rolepermissions_permission
+            referencedTableName: permissions
+            referencedColumnNames: permissionId
