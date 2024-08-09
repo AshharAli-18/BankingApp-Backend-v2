@@ -8,6 +8,8 @@ import com.Training.BankingApp.deletedaccount.DeletedAccount;
 import com.Training.BankingApp.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -63,9 +65,13 @@ public class AccountService {
         return sb.toString();
     }
 
-    public Account getAccount(long accountId) {
-        return accountRepository.findById(accountId)
+    public ResponseEntity<Account> getAccount(long accountId) {
+        Account account = accountRepository.findById(accountId)
                 .orElse(null);
+        if (account == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        return ResponseEntity.ok(account);
     }
 
     public Account getAccountByUserId(long userId) {
