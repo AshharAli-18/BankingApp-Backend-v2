@@ -21,7 +21,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @EnableConfigurationProperties(value = { ApiProperties.class })
 @EnableMethodSecurity
@@ -31,12 +30,14 @@ class SecurityConfig {
 
     private final JWTAuthenticationFilter jwtAuthenticationFilter;
     private final UserService userService;
+    private final PasswordEncoder passwordEncoder; // Injected from PasswordEncoderConfig
 
     @Value("${api.security.ignored}")
     private String[] ignored;
 
     @Autowired
     private ApiProperties props;
+
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return web -> {
@@ -67,19 +68,12 @@ class SecurityConfig {
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
         daoAuthenticationProvider.setUserDetailsService(userService.userDetailsService());
-        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
+        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder);
         return daoAuthenticationProvider;
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
     }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
-
-
 }

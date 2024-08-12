@@ -147,8 +147,8 @@ public class AccountService {
 
         User user = new User();
         user.setUsername(accountCreateRequest.getUsername());
-//        user.setPassword(passwordEncoder.encode(accountCreateRequest.getPassword()));
-        user.setPassword(accountCreateRequest.getPassword());
+        user.setPassword(passwordEncoder.encode(accountCreateRequest.getPassword()));
+//        user.setPassword(accountCreateRequest.getPassword());
         user.setEmail(accountCreateRequest.getEmail());
         user.setPhoneNumber(accountCreateRequest.getPhoneNumber());
         user.setRoleId(2);
