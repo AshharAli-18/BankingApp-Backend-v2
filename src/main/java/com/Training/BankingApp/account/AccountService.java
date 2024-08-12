@@ -8,6 +8,8 @@ import com.Training.BankingApp.deletedaccount.DeletedAccount;
 import com.Training.BankingApp.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,7 @@ import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.HashSet;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 @Service
@@ -63,37 +66,51 @@ public class AccountService {
         return sb.toString();
     }
 
-    public Account getAccount(long accountId) {
-        return accountRepository.findById(accountId)
+    public ResponseEntity<Account> getAccount(long accountId) {
+        Account account = accountRepository.findById(accountId)
                 .orElse(null);
+        if (account == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        return ResponseEntity.ok(account);
     }
 
-    public Account getAccountByUserId(long userId) {
-        return accountRepository.findByUserId(userId);
+    public ResponseEntity<Account> getAccountByUserId(long userId) {
+        Account account = accountRepository.findByUserId(userId);
+
+        if(account==null){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        return ResponseEntity.ok(account);
     }
 
-    public List<Account> getAllAccounts(Integer page, Integer size) {
+    public ResponseEntity<List<Account>> getAllAccounts(Integer page, Integer size) {
         if (page < 0) {
             page = 0;
         }
         if (size > MAX_PAGE_SIZE) {
             size = MAX_PAGE_SIZE;
         }
-        return accountRepository.findAll(PageRequest.of(page, size)).getContent();
+
+        List<Account> accounts = accountRepository.findAll(PageRequest.of(page, size)).getContent();
+
+        if (accounts.isEmpty()) {
+            return ResponseEntity.noContent().build();  // 204 No Content if the list is empty
+        }
+
+        return ResponseEntity.ok(accounts);  // 200 OK with the list of accounts
     }
 
     public void updateAccount(AccountUpdateRequest updateRequest) {
         Account account = accountRepository.findById(updateRequest.getAccountId())
-                .orElseThrow(() -> new RuntimeException("Account not found"));
+                .orElseThrow(() -> new NoSuchElementException("Account not found"));
 
-        // Update account details
         account.setAccountType(updateRequest.getAccountType());
         account.setBalance(updateRequest.getBalance());
         accountRepository.save(account); // Save updated account
 
-        // Update user details
         User user = userRepository.findById(account.getUserId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new NoSuchElementException("User not found"));
         user.setUsername(updateRequest.getUsername());
         user.setEmail(updateRequest.getEmail());
         user.setPhoneNumber(updateRequest.getPhone());
@@ -101,6 +118,7 @@ public class AccountService {
         user.setName(updateRequest.getName());
         userRepository.save(user); // Save updated user
     }
+
 
     public void deleteAccount(long accountId) {
         Account account = accountRepository.findById(accountId)
@@ -129,8 +147,8 @@ public class AccountService {
 
         User user = new User();
         user.setUsername(accountCreateRequest.getUsername());
-//        user.setPassword(passwordEncoder.encode(accountCreateRequest.getPassword()));
-        user.setPassword(accountCreateRequest.getPassword());
+        user.setPassword(passwordEncoder.encode(accountCreateRequest.getPassword()));
+//        user.setPassword(accountCreateRequest.getPassword());
         user.setEmail(accountCreateRequest.getEmail());
         user.setPhoneNumber(accountCreateRequest.getPhoneNumber());
         user.setRoleId(2);

@@ -16,18 +16,14 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
 public class CustomerRequestController {
 
     @Autowired
     private CustomerRequestService customerRequestService;
 
-    @PostMapping("/v2/request")
-    @CrossOrigin(origins = "http://localhost:3000")
+    @PostMapping("/v2/auth/request")
     public ResponseEntity<?> customerRequest(@RequestBody CustomerRequestDTO customerRequestDTO) {
-
         try {
-
             customerRequestService.createCustomerRequest(customerRequestDTO);
             return ResponseEntity.ok("Customer Request Sent Successfully!");
         } catch (Exception e) {

@@ -1,6 +1,7 @@
 package com.Training.BankingApp.customerrequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,6 +11,9 @@ public class CustomerRequestService {
 
     @Autowired
     private CustomerRequestRepository customerRequestRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public void createCustomerRequest(CustomerRequestDTO customerRequestDto) {
         if (customerRequestRepository.existsByUsername(customerRequestDto.getUsername())) {
@@ -23,6 +27,8 @@ public class CustomerRequestService {
         customerRequest.setId(System.currentTimeMillis());
         customerRequest.setUsername(customerRequestDto.getUsername());
         customerRequest.setEmail(customerRequestDto.getEmail());
+        customerRequest.setPassword(customerRequestDto.getPassword());
+//        customerRequest.setPassword(passwordEncoder.encode(customerRequestDto.getPassword()));
         customerRequest.setPassword(customerRequestDto.getPassword());
         customerRequest.setName(customerRequestDto.getName());
         customerRequest.setAddress(customerRequestDto.getAddress());

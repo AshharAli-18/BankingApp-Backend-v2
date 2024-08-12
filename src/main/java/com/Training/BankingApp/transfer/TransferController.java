@@ -36,7 +36,6 @@ public class TransferController {
     }
 
     @GetMapping("/v2/transfers")
-    @CrossOrigin(origins = "http://localhost:3000")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public List<Transfer> getAllTransfers(
             @RequestParam(name = "page", defaultValue = "0") Integer page,
